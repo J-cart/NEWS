@@ -15,7 +15,7 @@ interface MainNewsRepository {
     //TODO--- add paging 3 GET function
     fun getPagingNews():LiveData<PagingData<Article>>
     fun getPagingSearchNews(query: String):LiveData<PagingData<Article>>
-//    fun getMediatorPagingNews():LiveData<PagingData<Article>>
+    fun getMediatorPagingNews():LiveData<PagingData<Article>>
 
     fun getAllNews(): Flow<List<Article>>
     suspend fun deleteArticle(article: Article)

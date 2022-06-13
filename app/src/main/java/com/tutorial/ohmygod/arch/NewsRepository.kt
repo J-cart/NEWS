@@ -1,8 +1,8 @@
 package com.tutorial.ohmygod.arch
 
-import androidx.paging.Pager
-import androidx.paging.PagingConfig
-import androidx.paging.liveData
+import androidx.lifecycle.LiveData
+import androidx.paging.*
+import com.tutorial.ohmygod.arch.paging3.BNRemoteMediator
 import com.tutorial.ohmygod.arch.paging3.BreakingNewsPagingSource
 import com.tutorial.ohmygod.arch.paging3.SearchNewsPagingSource
 import com.tutorial.ohmygod.db.AppDatabase
@@ -33,15 +33,15 @@ class NewsRepository @Inject constructor(private val newsApi: NewsApiService, va
 
 
 
-    /*@OptIn(ExperimentalPagingApi::class)
+    @OptIn(ExperimentalPagingApi::class)
     override fun getMediatorPagingNews(): LiveData<PagingData<Article>> {
         return Pager(
             config = PagingConfig(20, enablePlaceholders = false),
             remoteMediator =  BNRemoteMediator(newsApi, db) ,
-            pagingSourceFactory = { SearchNewsPagingSource(newsApi, "") }//db.getBNMediatorDao().getAll()
+            pagingSourceFactory = { db.getBNMediatorDao().getAllMediatorNews()}
+            /*SearchNewsPagingSource(newsApi, "")*/ //db.getBNMediatorDao().getAll()
         ).liveData
-
-    }*/
+    }
 
 
 //////////////////////////////////////////////////////////////////////////////////////////
