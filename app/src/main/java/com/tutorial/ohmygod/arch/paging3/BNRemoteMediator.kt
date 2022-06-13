@@ -27,15 +27,16 @@ class BNRemoteMediator(
         state: PagingState<Int, Article>
     ): MediatorResult {
 
-        val page =
-            when (val pageKeyData = getKeyPageData(loadType, state)) {
-                is MediatorResult.Success -> return pageKeyData
-                else -> pageKeyData as Int
-            }
+
         return try {
+            val page =
+                when (val pageKeyData = getKeyPageData(loadType, state)) {
+                    is MediatorResult.Success -> return pageKeyData
+                    else -> pageKeyData as Int
+                }
             val response = api.getBreakingNews(page = page)
             val result = response.body()?.articles
-            val isEndOfList = result!!.isEmpty()
+            val isEndOfList = result?.size!! < state.config.pageSize
 
             db.withTransaction {
                 if (loadType == LoadType.REFRESH) {
@@ -70,13 +71,13 @@ class BNRemoteMediator(
             LoadType.PREPEND -> {
                 val remoteKeys = getFirstRemoteKey(state)
                 val prevKey =
-                    remoteKeys?.prevKey ?: MediatorResult.Success(endOfPaginationReached = false)
+                    remoteKeys?.prevKey ?: MediatorResult.Success(endOfPaginationReached = true)
                 prevKey
             }
             LoadType.APPEND -> {
                 val remoteKeys = getLastRemoteKey(state)
                 val nextKey =
-                    remoteKeys?.nextKey ?: MediatorResult.Success(endOfPaginationReached = false)
+                    remoteKeys?.nextKey ?: MediatorResult.Success(endOfPaginationReached = true)
                 nextKey
             }
         }
@@ -95,7 +96,7 @@ class BNRemoteMediator(
 
     private suspend fun getLastRemoteKey(state: PagingState<Int, Article>): RemoteKey? {
         return state.pages
-            .lastOrNull { it.data.isNullOrEmpty() }
+            .lastOrNull { it.data.isEmpty() }
             ?.data?.lastOrNull()
             ?.let { article ->
                 article.title?.let { it -> db.getRemoteKeysDao().getRemotekeys(it) }

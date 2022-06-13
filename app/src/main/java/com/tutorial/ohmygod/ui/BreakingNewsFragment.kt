@@ -72,7 +72,7 @@ class BreakingNews : Fragment() {
 
         }
 
-        viewModel.pagingNews.observe(viewLifecycleOwner) {
+        viewModel.mediatorPagingNews.observe(viewLifecycleOwner) {
             pagingAdapter.submitData(viewLifecycleOwner.lifecycle, it)
         }
 
@@ -83,7 +83,7 @@ class BreakingNews : Fragment() {
     //endregion
 
 //region NORMAL REQUEST
-        binding.apply {
+      /*  binding.apply {
             breakingNewsRV.adapter = newsAdapter
         }
 
@@ -111,7 +111,7 @@ class BreakingNews : Fragment() {
         newsAdapter.adapterClickListener { article->
             val navigate = BreakingNewsDirections.actionBreakingNewsToArticleFragment(article)
             findNavController().navigate(navigate)
-        }
+        }*/
         //endregion
 
     }

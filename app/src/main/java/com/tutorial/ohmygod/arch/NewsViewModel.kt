@@ -54,7 +54,7 @@ class NewsViewModel @Inject constructor(
         repository.getPagingSearchNews(query).cachedIn(viewModelScope)
     }
 
-//    val mediatorPagingNews = repository.getMediatorPagingNews().cachedIn(viewModelScope)
+    val mediatorPagingNews = repository.getMediatorPagingNews().cachedIn(viewModelScope)
 
 
     // region NORMAL REQUEST

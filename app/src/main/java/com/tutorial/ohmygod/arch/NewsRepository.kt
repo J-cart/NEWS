@@ -39,7 +39,6 @@ class NewsRepository @Inject constructor(private val newsApi: NewsApiService, va
             config = PagingConfig(20, enablePlaceholders = false),
             remoteMediator =  BNRemoteMediator(newsApi, db) ,
             pagingSourceFactory = { db.getBNMediatorDao().getAllMediatorNews()}
-            /*SearchNewsPagingSource(newsApi, "")*/ //db.getBNMediatorDao().getAll()
         ).liveData
     }
 
