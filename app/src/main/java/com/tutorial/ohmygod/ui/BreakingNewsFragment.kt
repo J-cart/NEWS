@@ -13,6 +13,7 @@ import com.tutorial.ohmygod.arch.paging3.BNLoadingAdapter
 import com.tutorial.ohmygod.arch.paging3.BNPagingAdapter
 import com.tutorial.ohmygod.databinding.FragmentBreakingNewsBinding
 import com.tutorial.ohmygod.utils.NewsAdapter
+import com.tutorial.ohmygod.utils.Resource
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -82,7 +83,7 @@ class BreakingNews : Fragment() {
     //endregion
 
 //region NORMAL REQUEST
-      /*  binding.apply {
+        binding.apply {
             breakingNewsRV.adapter = newsAdapter
         }
 
@@ -111,7 +112,6 @@ class BreakingNews : Fragment() {
             val navigate = BreakingNewsDirections.actionBreakingNewsToArticleFragment(article)
             findNavController().navigate(navigate)
         }
-*/
         //endregion
 
     }
