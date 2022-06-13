@@ -38,7 +38,16 @@
         android:label="Saved News"
         tools:layout="@layout/fragment_saved_news">
         <action
-            android:id="@+id/action_savedNews_to_articleFragment"
-            app:destination="@id/articleFragment" />
+            android:id="@+id/action_savedNews_to_savedNewsWebView"
+            app:destination="@id/savedNewsWebView" />
+    </fragment>
+    <fragment
+        android:id="@+id/savedNewsWebView"
+        android:name="com.tutorial.ohmygod.ui.SavedNewsWebView"
+        android:label="Saved News"
+        tools:layout="@layout/fragment_saved_news_web_view">
+        <argument
+            android:name="savedArticle"
+            app:argType="com.tutorial.ohmygod.db.SavedArticle" />
     </fragment>
 </navigation>

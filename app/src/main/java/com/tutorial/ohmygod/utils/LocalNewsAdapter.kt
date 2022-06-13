@@ -10,11 +10,12 @@ import coil.load
 import com.tutorial.ohmygod.R
 import com.tutorial.ohmygod.databinding.NewsViewHolderBinding
 import com.tutorial.ohmygod.db.Article
+import com.tutorial.ohmygod.db.SavedArticle
 
-class LocalNewsAdapter: ListAdapter<Article, LocalNewsAdapter.ViewHolder>(DiffCallback) {
+class LocalNewsAdapter: ListAdapter<SavedArticle, LocalNewsAdapter.ViewHolder>(DiffCallback) {
     inner class ViewHolder(view: View): RecyclerView.ViewHolder(view) {
         private val binding = NewsViewHolderBinding.bind(view)
-        fun bind(article: Article){
+        fun bind(article: SavedArticle){
             binding.apply {
                 imgUrl.load(article.urlToImage){
                     placeholder(R.drawable.ic_baseline_image_24)
@@ -46,22 +47,22 @@ class LocalNewsAdapter: ListAdapter<Article, LocalNewsAdapter.ViewHolder>(DiffCa
 
     }
 
-    companion object DiffCallback : DiffUtil.ItemCallback<Article>() {
+    companion object DiffCallback : DiffUtil.ItemCallback<SavedArticle>() {
 
-        override fun areItemsTheSame(oldItem: Article, newItem: Article): Boolean {
+        override fun areItemsTheSame(oldItem: SavedArticle, newItem: SavedArticle): Boolean {
             return oldItem.url == oldItem.url// oldItem.title == newItem.title  || oldItem.url == oldItem.url
         }
 
-        override fun areContentsTheSame(oldItem: Article, newItem: Article): Boolean {
+        override fun areContentsTheSame(oldItem: SavedArticle, newItem: SavedArticle): Boolean {
             return    oldItem == newItem//oldItem.url == newItem.url && oldItem.description == oldItem.description
         }
 
     }
 
 
-    private var listener:((Article)->Unit)? = null
+    private var listener:((SavedArticle)->Unit)? = null
 
-    fun adapterClickListener(listener:(Article)->Unit){
+    fun adapterClickListener(listener:(SavedArticle)->Unit){
         this.listener = listener
     }
 }

@@ -1,6 +1,7 @@
 
 package com.tutorial.ohmygod.arch.paging3
 
+import android.util.Log
 import androidx.paging.ExperimentalPagingApi
 import androidx.paging.LoadType
 import androidx.paging.PagingState
@@ -22,25 +23,29 @@ class BNRemoteMediator(
     private val api: NewsApiService,
     private val db: AppDatabase
 ) : RemoteMediator<Int, Article>() {
+
+    override suspend fun initialize(): InitializeAction {
+        return InitializeAction.LAUNCH_INITIAL_REFRESH
+    }
     override suspend fun load(
         loadType: LoadType,
         state: PagingState<Int, Article>
     ): MediatorResult {
 
+        val page =
+            when (val pageKeyData = getKeyPageData(loadType, state)) {
+                is MediatorResult.Success -> return pageKeyData
+                else -> pageKeyData as Int
+            }
 
         return try {
-            val page =
-                when (val pageKeyData = getKeyPageData(loadType, state)) {
-                    is MediatorResult.Success -> return pageKeyData
-                    else -> pageKeyData as Int
-                }
             val response = api.getBreakingNews(page = page)
             val result = response.body()?.articles
             val isEndOfList = result?.size!! < state.config.pageSize
 
             db.withTransaction {
                 if (loadType == LoadType.REFRESH) {
-                    db.getBNMediatorDao().deleteAll()
+                    db.getAppDao().deleteAll()
                     db.getRemoteKeysDao().deleteAllKeys()
                 }
                 val prevKey = if (page == STARTING_PAGE_INDEX) null else page - 1
@@ -51,13 +56,16 @@ class BNRemoteMediator(
                 }
 
                 db.getRemoteKeysDao().insertAllKeys(keys)
-                db.getBNMediatorDao().insertAll(result)
+                db.getAppDao().insertAll(result)
 
             }
+            Log.d("PAGINGSOURCEIO", "we fetched the data alright....")
             MediatorResult.Success(endOfPaginationReached = isEndOfList)
         } catch (e: IOException) {
+            Log.d("PAGINGSOURCEIO", "$e")
             MediatorResult.Error(e)
         } catch (e: HttpException) {
+            Log.d("PAGINGSOURCEIO", "$e")
             MediatorResult.Error(e)
         }
     }
@@ -71,13 +79,13 @@ class BNRemoteMediator(
             LoadType.PREPEND -> {
                 val remoteKeys = getFirstRemoteKey(state)
                 val prevKey =
-                    remoteKeys?.prevKey ?: MediatorResult.Success(endOfPaginationReached = true)
+                    remoteKeys?.prevKey ?: MediatorResult.Success(endOfPaginationReached = remoteKeys != null)
                 prevKey
             }
             LoadType.APPEND -> {
                 val remoteKeys = getLastRemoteKey(state)
                 val nextKey =
-                    remoteKeys?.nextKey ?: MediatorResult.Success(endOfPaginationReached = true)
+                    remoteKeys?.nextKey ?: MediatorResult.Success(endOfPaginationReached =remoteKeys != null)
                 nextKey
             }
         }
@@ -96,7 +104,7 @@ class BNRemoteMediator(
 
     private suspend fun getLastRemoteKey(state: PagingState<Int, Article>): RemoteKey? {
         return state.pages
-            .lastOrNull { it.data.isEmpty() }
+            .lastOrNull { it.data.isNotEmpty() }
             ?.data?.lastOrNull()
             ?.let { article ->
                 article.title?.let { it -> db.getRemoteKeysDao().getRemotekeys(it) }

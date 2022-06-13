@@ -12,6 +12,8 @@ import androidx.navigation.fragment.navArgs
 import com.google.android.material.snackbar.Snackbar
 import com.tutorial.ohmygod.arch.NewsViewModel
 import com.tutorial.ohmygod.databinding.FragmentArticleBinding
+import com.tutorial.ohmygod.db.Article
+import com.tutorial.ohmygod.db.SavedArticle
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collect
 
@@ -19,6 +21,9 @@ import kotlinx.coroutines.flow.collect
 class ArticleFragment : Fragment() {
     private val viewModel:NewsViewModel by activityViewModels()
     private val args:ArticleFragmentArgs by navArgs()
+
+    lateinit var savedArticle:SavedArticle
+    lateinit var article: Article
 
     private var _binding: FragmentArticleBinding? = null
     private val binding get() = _binding!!
@@ -54,11 +59,21 @@ class ArticleFragment : Fragment() {
         }
 
         binding.fab.setOnClickListener {
-            /*viewModel.insertArticle(article =args.article )
-            Snackbar.make(view,"Article saved Successfully",Snackbar.LENGTH_SHORT).show()*/
-
             viewLifecycleOwner.lifecycleScope.launchWhenStarted {
-                viewModel.checkExisting(args.article)
+                val newArticle = args.article.let {
+                    SavedArticle(
+                        id = it.id,
+                        author = it.author,
+                        content = it.author,
+                        description = it.description,
+                        publishedAt = it.publishedAt,
+                        source = it.source,
+                        title = it.title,
+                        url = it.url,
+                        urlToImage = it.urlToImage
+                    )
+                }
+                viewModel.checkExisting(newArticle)
             }
 
         }

@@ -14,6 +14,7 @@ import com.tutorial.ohmygod.db.Article
 class BNPagingAdapter : PagingDataAdapter<Article, BNPagingAdapter.ViewHolder>(diffObject) {
     inner class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
         private val binding = NewsViewHolderBinding.bind(view)
+
         fun bind(article: Article) {
             binding.apply {
                 imgUrl.load(article.urlToImage) {

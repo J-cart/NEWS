@@ -65,14 +65,8 @@ class SearchNews : Fragment() {
                     showLoadingState()
                 }
                 is LoadState.Error -> {
-                    binding.emptyStateTv.isVisible = false
+                    binding.emptyStateTv.isVisible = true
                     hideLoadingState()
-                    val errorState = loadstate.source.refresh as? LoadState.Error
-                        ?: loadstate.source.refresh as? LoadState.Error
-                    showError("${errorState?.error}")
-                    binding.retryLoadBtn.setOnClickListener {
-                        pagingAdapter.retry()
-                    }
                 }
                 is LoadState.NotLoading -> {
                     binding.emptyStateTv.isVisible = true
@@ -99,7 +93,7 @@ class SearchNews : Fragment() {
                     binding.searchView.isActivated = true
                     job?.cancel()
                     job = MainScope().launch {
-                        delay(2000L)
+                        delay(600L)
                         newText?.let { viewModel.querySearch(it) }
                     }
                     //newText.let { viewModel.searchNews(it) }
@@ -180,16 +174,9 @@ class SearchNews : Fragment() {
     }
 
     private fun showError(errorText: String) {
-        binding.errorImg.visibility = View.VISIBLE
-        binding.errorText.visibility = View.VISIBLE
-        binding.errorText.text = errorText
-
-
     }
 
     private fun hideError() {
-        binding.errorImg.visibility = View.GONE
-        binding.errorText.visibility = View.GONE
     }
 
 }

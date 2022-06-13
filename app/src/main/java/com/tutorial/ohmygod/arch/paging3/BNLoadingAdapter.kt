@@ -13,20 +13,21 @@ import com.tutorial.ohmygod.databinding.NewsLoadStateBinding
 class BNLoadingAdapter (private val onRetryClicked:()->Unit): LoadStateAdapter<BNLoadingAdapter.ViewHolder>() {
     inner class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
         private val binding = NewsLoadStateBinding.bind(view)
+        init {
+           binding.retryBtn.setOnClickListener{
+                onRetryClicked.invoke()
+            }
+        }
         fun bind(loadState: LoadState) {
             if (loadState is LoadState.Error) {
                 binding.errorText.text = loadState.error.localizedMessage
             }
-
 
             binding.apply {
                 progressBar.isVisible = loadState is LoadState.Loading
                 errorText.isVisible = loadState is LoadState.Error
                 retryBtn.isVisible = loadState is LoadState.Error
 
-                retryBtn.setOnClickListener{
-                   onRetryClicked.invoke()
-                }
             }
         }
 

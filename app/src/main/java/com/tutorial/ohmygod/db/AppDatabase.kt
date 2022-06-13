@@ -6,12 +6,12 @@ import androidx.room.TypeConverters
 import com.tutorial.ohmygod.utils.SourceConverter
 
 @Database(
-    entities = [Article::class,RemoteKey::class],//,RemoteKey::class
-    version = 2
+    entities = [Article::class,RemoteKey::class,SavedArticle::class],
+    version = 3
 )
 @TypeConverters(SourceConverter::class)
 abstract class AppDatabase:RoomDatabase() {
     abstract fun getAppDao(): AppDao
     abstract fun getRemoteKeysDao():RemoteKeyDao
-    abstract fun getBNMediatorDao():BNMediatorDao
+    abstract fun getSavedNewsDao():SavedNewsDao
 }

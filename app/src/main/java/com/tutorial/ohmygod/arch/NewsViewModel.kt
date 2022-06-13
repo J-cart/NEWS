@@ -4,6 +4,7 @@ import androidx.lifecycle.*
 import androidx.paging.cachedIn
 import com.tutorial.ohmygod.db.Article
 import com.tutorial.ohmygod.db.JsonResponse
+import com.tutorial.ohmygod.db.SavedArticle
 import com.tutorial.ohmygod.utils.DispatcherProvider
 import com.tutorial.ohmygod.utils.Resource
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -18,7 +19,7 @@ class NewsViewModel @Inject constructor(
     private val repository: MainNewsRepository,
     val dispatcher: DispatcherProvider
 ) : ViewModel() {
-
+    //TODO -- GET THE RESULT FROM THE REPOSITORY AND SETUP A EVENT TO PASS THE DATA TO THE UI
     private val _eventsChannel = Channel<Events>()
     val eventsChannel = _eventsChannel.receiveAsFlow()
 
@@ -29,23 +30,22 @@ class NewsViewModel @Inject constructor(
 
     private val existingStatus = MutableLiveData<Int>()
 
-    fun checkExisting(article: Article) {
+    fun checkExisting(article: SavedArticle) {
         viewModelScope.launch {
-            existingStatus.value = repository.checkIfExist(article.url.toString())
+            existingStatus.value = repository.checkIfSavedExist(article.url.toString())
             if (existingStatus.value!! > 0) {
                 _eventsChannel.send(Events.Failure)
                 return@launch
             }
-            insertArticle(article)
+            saveArticle(article)
             _eventsChannel.send(Events.Successful)
         }
 
     }
 
-    //TODO -- GET THE RESULT FROM THE REPOSITORY AND SETUP A EVENT TO PASS THE DATA TO THE UI
-
+    //PAGING
     val pagingNews = repository.getPagingNews().cachedIn(viewModelScope)
-    private val searchQuery = MutableLiveData<String>("")
+    private val searchQuery = MutableLiveData("")
 
     fun querySearch(query: String){
         searchQuery.value = query
@@ -103,19 +103,21 @@ class NewsViewModel @Inject constructor(
 
 
     //region ROOM-DB
-    fun getLocalNews() = repository.getAllNews().asLiveData()
 
-    fun insertArticle(article: Article) {
+    fun getAllSavedNews() = repository.getAllSavedNews().asLiveData()
+
+    fun saveArticle(article: SavedArticle) {
         viewModelScope.launch {
-            repository.insertArticle(article)
+            repository.saveArticle(article)
         }
     }
 
-    fun deleteArticle(article: Article) {
+    fun deleteSavedArticle(article: SavedArticle) {
         viewModelScope.launch {
-            repository.deleteArticle(article)
+            repository.deleteSavedArticle(article)
         }
     }
+
     //endregion
 
 }

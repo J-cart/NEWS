@@ -13,6 +13,8 @@ import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.snackbar.Snackbar
 import com.tutorial.ohmygod.arch.NewsViewModel
 import com.tutorial.ohmygod.databinding.FragmentSavedNewsBinding
+import com.tutorial.ohmygod.db.Article
+import com.tutorial.ohmygod.db.Source
 import com.tutorial.ohmygod.utils.LocalNewsAdapter
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -40,7 +42,7 @@ class SavedNews : Fragment() {
         binding.apply {
             savedNewsRV.adapter = savedNewsAdapter
         }
-        viewModel.getLocalNews().observe(viewLifecycleOwner) { list ->
+        viewModel.getAllSavedNews().observe(viewLifecycleOwner) { list ->
             when {
                 list.isNotEmpty() -> {
                     savedNewsAdapter.submitList(list)
@@ -52,7 +54,7 @@ class SavedNews : Fragment() {
         }
 
         savedNewsAdapter.adapterClickListener {
-            val navigate = SavedNewsDirections.actionSavedNewsToArticleFragment(it)
+            val navigate = SavedNewsDirections.actionSavedNewsToSavedNewsWebView(it)
             findNavController().navigate(navigate)
         }
 
@@ -72,10 +74,10 @@ class SavedNews : Fragment() {
             override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
                 val position = viewHolder.layoutPosition
                 val article = savedNewsAdapter.currentList[position]
-                viewModel.deleteArticle(article)
+                viewModel.deleteSavedArticle(article)
                 Snackbar.make(view, "Article deleted", Snackbar.LENGTH_SHORT).apply {
                     setAction("UNDO delete") {
-                        viewModel.insertArticle(article)
+                        viewModel.saveArticle(article)
                     }
                     show()
                 }

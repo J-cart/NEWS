@@ -4,6 +4,7 @@ import androidx.lifecycle.LiveData
 import androidx.paging.PagingData
 import com.tutorial.ohmygod.db.Article
 import com.tutorial.ohmygod.db.JsonResponse
+import com.tutorial.ohmygod.db.SavedArticle
 import com.tutorial.ohmygod.utils.Resource
 import kotlinx.coroutines.flow.Flow
 
@@ -17,9 +18,10 @@ interface MainNewsRepository {
     fun getPagingSearchNews(query: String):LiveData<PagingData<Article>>
     fun getMediatorPagingNews():LiveData<PagingData<Article>>
 
-    fun getAllNews(): Flow<List<Article>>
-    suspend fun deleteArticle(article: Article)
-    suspend fun insertArticle(article: Article)
-    suspend fun checkIfExist(data:String):Int
+
+    fun getAllSavedNews(): Flow<List<SavedArticle>>
+    suspend fun deleteSavedArticle(article: SavedArticle)
+    suspend fun saveArticle(article: SavedArticle)
+    suspend fun checkIfSavedExist(data:String):Int
 
 }

@@ -8,12 +8,12 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
 import androidx.paging.LoadState
+import com.google.android.material.snackbar.Snackbar
 import com.tutorial.ohmygod.arch.NewsViewModel
 import com.tutorial.ohmygod.arch.paging3.BNLoadingAdapter
 import com.tutorial.ohmygod.arch.paging3.BNPagingAdapter
 import com.tutorial.ohmygod.databinding.FragmentBreakingNewsBinding
 import com.tutorial.ohmygod.utils.NewsAdapter
-import com.tutorial.ohmygod.utils.Resource
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -39,31 +39,32 @@ class BreakingNews : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
- //region PAGING3
+        //region PAGING3
 
         binding.apply {
             breakingNewsRV.adapter = pagingAdapter.withLoadStateHeaderAndFooter(
-                header =BNLoadingAdapter{ pagingAdapter.retry() },
-                footer =BNLoadingAdapter{ pagingAdapter.retry()}
+                header = BNLoadingAdapter { pagingAdapter.retry() },
+                footer = BNLoadingAdapter { pagingAdapter.retry() }
             )
         }
 
-        pagingAdapter.addLoadStateListener { loadstate->
-            when(loadstate.source.refresh){
-                is LoadState.Loading->{
+        pagingAdapter.addLoadStateListener { loadstate ->
+            when (loadstate.mediator?.refresh) {
+                is LoadState.Loading -> {
                     hideError()
                     showLoadingState()
                 }
-                is LoadState.Error->{
+                is LoadState.Error -> {
                     hideLoadingState()
-//                   val errorState = loadstate.source.append as? LoadState.Error ?:loadstate.source.prepend as? LoadState.Error
-                   val errorState = loadstate.source.refresh as? LoadState.Error ?:loadstate.source.refresh as? LoadState.Error
-                    showError("${errorState?.error}")
-                    binding.retryLoadBtn.setOnClickListener{
-                        pagingAdapter.retry()
-                    }
+                    showLoadingState()
+                    val errorState = loadstate.mediator?.refresh as? LoadState.Error
+                        ?: loadstate.mediator?.refresh as? LoadState.Error
+//                    showError("${errorState?.error}")
+                    Snackbar.make(requireView(), "ERROR! Try refreshing news", Snackbar.LENGTH_LONG)
+                        .setAction("Refresh") { pagingAdapter.retry() }.show()
+
                 }
-                is LoadState.NotLoading->{
+                is LoadState.NotLoading -> {
                     hideError()
                     hideLoadingState()
                 }
@@ -76,42 +77,43 @@ class BreakingNews : Fragment() {
             pagingAdapter.submitData(viewLifecycleOwner.lifecycle, it)
         }
 
-        pagingAdapter.adapterClickListener {article->
+        pagingAdapter.adapterClickListener { article ->
             val navigate = BreakingNewsDirections.actionBreakingNewsToArticleFragment(article)
             findNavController().navigate(navigate)
         }
-    //endregion
+        //endregion
+
 
 //region NORMAL REQUEST
-      /*  binding.apply {
-            breakingNewsRV.adapter = newsAdapter
-        }
+        /*  binding.apply {
+              breakingNewsRV.adapter = newsAdapter
+          }
 
-        viewModel.breakingNews.observe(viewLifecycleOwner){resource->
-            when(resource){
-                is Resource.Loading ->{
-                    hideError()
-                    showLoadingState()
-                }
-                is Resource.Successful->{
-                    hideError()
-                    hideLoadingState()
-                    newsAdapter.submitList(resource.data?.articles)
-                }
-                is Resource.Failure->{
-                    hideLoadingState()
-                    resource.msg?.let {
-                        showError(it)
-                    }
-                }
-            }
+          viewModel.breakingNews.observe(viewLifecycleOwner){resource->
+              when(resource){
+                  is Resource.Loading ->{
+                      hideError()
+                      showLoadingState()
+                  }
+                  is Resource.Successful->{
+                      hideError()
+                      hideLoadingState()
+                      newsAdapter.submitList(resource.data?.articles)
+                  }
+                  is Resource.Failure->{
+                      hideLoadingState()
+                      resource.msg?.let {
+                          showError(it)
+                      }
+                  }
+              }
 
-        }
+          }
 
-        newsAdapter.adapterClickListener { article->
-            val navigate = BreakingNewsDirections.actionBreakingNewsToArticleFragment(article)
-            findNavController().navigate(navigate)
-        }*/
+          newsAdapter.adapterClickListener { article->
+              val navigate = BreakingNewsDirections.actionBreakingNewsToArticleFragment(article)
+              findNavController().navigate(navigate)
+          }*/
         //endregion
 
     }
@@ -125,18 +127,10 @@ class BreakingNews : Fragment() {
     }
 
     private fun showError(errorText: String) {
-        binding.errorImg.visibility = View.VISIBLE
-        binding.errorText.visibility = View.VISIBLE
-        binding.errorText.text = errorText
-        binding.retryLoadBtn.visibility = View.VISIBLE
-
-
     }
 
     private fun hideError() {
-        binding.retryLoadBtn.visibility = View.GONE
-        binding.errorImg.visibility = View.GONE
-        binding.errorText.visibility = View.GONE
+
     }
 
 }

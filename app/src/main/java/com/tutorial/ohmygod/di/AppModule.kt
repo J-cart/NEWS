@@ -36,7 +36,7 @@ object AppModule {
             appContext,
             AppDatabase::class.java,
             NEWS_DATABASE_NAME
-        ).addMigrations(MIGRATION()).build()
+        ).addMigrations(MIGRATION2()).build()
 
 
     @Singleton
@@ -77,6 +77,13 @@ object AppModule {
     class MIGRATION : Migration(1, 2) {
         override fun migrate(database: SupportSQLiteDatabase) {
             database.execSQL("CREATE TABLE IF NOT EXISTS `breaking_news_remote_keys` (`id` TEXT NOT NULL,`prevKey` INTEGER ,`nextKey` INTEGER , PRIMARY KEY(`id`))")
+        }
+    }
+ class MIGRATION2 : Migration(2, 3) {
+        override fun migrate(database: SupportSQLiteDatabase) {
+            database.execSQL("CREATE TABLE IF NOT EXISTS `saved_article` " +
+                    "(`id` INTEGER,`author` TEXT  ,`content` TEXT  ,`description` TEXT ,`publishedAt` TEXT ,`source` TEXT ,`title` TEXT ,`url` TEXT ,`urlToImage` TEXT , PRIMARY KEY(`id`))" +
+                    "")
         }
     }
 
