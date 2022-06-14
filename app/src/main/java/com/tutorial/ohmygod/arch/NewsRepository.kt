@@ -13,6 +13,7 @@ import javax.inject.Inject
 class NewsRepository @Inject constructor(private val newsApi: NewsApiService, val db: AppDatabase) :
     MainNewsRepository {
 
+
     //TODO -- GET THE RESULT FROM THE PAGING-SOURCE WITH PAGER() AND RETURN A RESPONSE<T>
     override fun getPagingNews() =
         Pager(
@@ -36,7 +37,6 @@ class NewsRepository @Inject constructor(private val newsApi: NewsApiService, va
             pagingSourceFactory = { db.getAppDao().getAllMediatorNews() }
         ).liveData
     }
-
 
     //////////////////////////////////////////////////////////////////////////////////////
 

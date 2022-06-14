@@ -4,10 +4,13 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.paging.LoadState
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.google.android.material.snackbar.Snackbar
 import com.tutorial.ohmygod.arch.NewsViewModel
 import com.tutorial.ohmygod.arch.paging3.BNLoadingAdapter
@@ -15,6 +18,7 @@ import com.tutorial.ohmygod.arch.paging3.BNPagingAdapter
 import com.tutorial.ohmygod.databinding.FragmentBreakingNewsBinding
 import com.tutorial.ohmygod.utils.NewsAdapter
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
 class BreakingNews : Fragment() {
@@ -39,8 +43,13 @@ class BreakingNews : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        //region PAGING3
 
+        binding.swipeToRefresh.setOnRefreshListener{
+            pagingAdapter.retry()
+            binding.swipeToRefresh.isRefreshing = false
+        }
+
+        //region PAGING3
         binding.apply {
             breakingNewsRV.adapter = pagingAdapter.withLoadStateHeaderAndFooter(
                 header = BNLoadingAdapter { pagingAdapter.retry() },
@@ -55,21 +64,15 @@ class BreakingNews : Fragment() {
                     showLoadingState()
                 }
                 is LoadState.Error -> {
-                    hideLoadingState()
                     showLoadingState()
-                    val errorState = loadstate.mediator?.refresh as? LoadState.Error
-                        ?: loadstate.mediator?.refresh as? LoadState.Error
-//                    showError("${errorState?.error}")
                     Snackbar.make(requireView(), "ERROR! Try refreshing news", Snackbar.LENGTH_LONG)
                         .setAction("Refresh") { pagingAdapter.retry() }.show()
-
                 }
                 is LoadState.NotLoading -> {
                     hideError()
                     hideLoadingState()
                 }
             }
-
 
         }
 
@@ -125,6 +128,14 @@ class BreakingNews : Fragment() {
     private fun hideLoadingState() {
         binding.progressBar.visibility = View.GONE
     }
+
+//    private fun showRefresh() {
+//        binding.swipeToRefresh.isRefreshing = true
+//    }
+//
+//    private fun hideRefresh() {
+//        binding.swipeToRefresh.isRefreshing = false
+//    }
 
     private fun showError(errorText: String) {
     }

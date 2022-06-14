@@ -87,9 +87,14 @@ dependencies {
     implementation"com.google.dagger:hilt-android:2.41"
     kapt("com.google.dagger:hilt-android-compiler:2.41")
 
+    //paging3
     def paging_version = "3.1.1"
 
     implementation "androidx.paging:paging-runtime:$paging_version"
+
+    //swipe to refresh
+    implementation("androidx.swiperefreshlayout:swiperefreshlayout:1.1.0")
+
 
 
 }

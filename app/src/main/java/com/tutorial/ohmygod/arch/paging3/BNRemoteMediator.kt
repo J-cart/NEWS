@@ -40,8 +40,12 @@ class BNRemoteMediator(
 
         return try {
             val response = api.getBreakingNews(page = page)
+            var mainResult = emptyList<Article>()
             val result = response.body()?.articles
-            val isEndOfList = result?.size!! < state.config.pageSize
+            result?.let {
+                mainResult = it
+            }
+            val isEndOfList = mainResult.size < state.config.pageSize
 
             db.withTransaction {
                 if (loadType == LoadType.REFRESH) {
@@ -51,12 +55,12 @@ class BNRemoteMediator(
                 val prevKey = if (page == STARTING_PAGE_INDEX) null else page - 1
                 val nextKey = if (isEndOfList) null else page + 1
 
-                val keys = result.map {
+                val keys = mainResult.map {
                     RemoteKey(id = it.title!!, prevKey = prevKey, nextKey = nextKey)
                 }
 
                 db.getRemoteKeysDao().insertAllKeys(keys)
-                db.getAppDao().insertAll(result)
+                db.getAppDao().insertAll(mainResult)
 
             }
             Log.d("PAGINGSOURCEIO", "we fetched the data alright....")
@@ -79,13 +83,13 @@ class BNRemoteMediator(
             LoadType.PREPEND -> {
                 val remoteKeys = getFirstRemoteKey(state)
                 val prevKey =
-                    remoteKeys?.prevKey ?: MediatorResult.Success(endOfPaginationReached = remoteKeys != null)
+                    remoteKeys?.prevKey ?: MediatorResult.Success(endOfPaginationReached = true)//remoteKeys != null
                 prevKey
             }
             LoadType.APPEND -> {
                 val remoteKeys = getLastRemoteKey(state)
                 val nextKey =
-                    remoteKeys?.nextKey ?: MediatorResult.Success(endOfPaginationReached =remoteKeys != null)
+                    remoteKeys?.nextKey ?: MediatorResult.Success(endOfPaginationReached = false)//remoteKeys != null
                 nextKey
             }
         }

@@ -1,5 +1,6 @@
 package com.tutorial.ohmygod.arch.paging3
 
+import android.annotation.SuppressLint
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -18,9 +19,10 @@ class BNLoadingAdapter (private val onRetryClicked:()->Unit): LoadStateAdapter<B
                 onRetryClicked.invoke()
             }
         }
+        @SuppressLint("SetTextI18n")
         fun bind(loadState: LoadState) {
             if (loadState is LoadState.Error) {
-                binding.errorText.text = loadState.error.localizedMessage
+                binding.errorText.text = "${loadState.error.localizedMessage}: Please check your network connection"
             }
 
             binding.apply {
