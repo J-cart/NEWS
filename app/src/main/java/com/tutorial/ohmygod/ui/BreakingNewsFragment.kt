@@ -17,6 +17,10 @@ import com.tutorial.ohmygod.databinding.FragmentBreakingNewsBinding
 import com.tutorial.ohmygod.utils.NewsAdapter
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.flow.distinctUntilChanged
+import kotlinx.coroutines.flow.distinctUntilChangedBy
+import kotlinx.coroutines.flow.filter
+import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
 class BreakingNews : Fragment() {
@@ -68,6 +72,15 @@ class BreakingNews : Fragment() {
                 }
 
             }
+        }
+
+        lifecycleScope.launch {
+            pagingAdapter.loadStateFlow
+                .distinctUntilChangedBy {
+                    it.mediator?.refresh
+                }
+                .filter { it.mediator?.refresh is LoadState.NotLoading }
+                .collect { binding.breakingNewsRV.scrollToPosition(0) }
         }
 
         pagingAdapter.addLoadStateListener { loadstate ->

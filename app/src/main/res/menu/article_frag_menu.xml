@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <item
+        android:title="Refresh"
+        android:id="@+id/refreshPage"
+        app:showAsAction="never" />
+    <item
+        android:title="Open in browser"
+        android:id="@+id/openOutside"
+        app:showAsAction="never" />
+</menu>
