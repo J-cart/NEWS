@@ -38,6 +38,7 @@ class NewsRepository @Inject constructor(private val newsApi: NewsApiService, va
         ).liveData
     }
 
+    override suspend fun getAllItemsCount(): Int = db.getAppDao().getAllItemCount()
     //////////////////////////////////////////////////////////////////////////////////////
 
     override fun getAllSavedNews(): Flow<List<SavedArticle>> =

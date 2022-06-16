@@ -18,6 +18,8 @@ interface AppDao {
     @Query("DELETE FROM news_article")
     suspend fun deleteAll()
 
+    @Query("SELECT COUNT() FROM news_article")
+    suspend fun getAllItemCount():Int
 
 
 

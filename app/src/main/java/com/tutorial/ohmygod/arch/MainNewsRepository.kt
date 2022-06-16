@@ -17,7 +17,7 @@ interface MainNewsRepository {
     fun getPagingNews():LiveData<PagingData<Article>>
     fun getPagingSearchNews(query: String):LiveData<PagingData<Article>>
     fun getMediatorPagingNews():LiveData<PagingData<Article>>
-
+    suspend fun getAllItemsCount():Int
 
     fun getAllSavedNews(): Flow<List<SavedArticle>>
     suspend fun deleteSavedArticle(article: SavedArticle)

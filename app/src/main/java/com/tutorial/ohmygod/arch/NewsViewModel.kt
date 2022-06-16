@@ -2,7 +2,6 @@ package com.tutorial.ohmygod.arch
 
 import androidx.lifecycle.*
 import androidx.paging.cachedIn
-import com.tutorial.ohmygod.db.Article
 import com.tutorial.ohmygod.db.JsonResponse
 import com.tutorial.ohmygod.db.SavedArticle
 import com.tutorial.ohmygod.utils.DispatcherProvider
@@ -20,8 +19,8 @@ class NewsViewModel @Inject constructor(
     val dispatcher: DispatcherProvider
 ) : ViewModel() {
     //TODO -- GET THE RESULT FROM THE REPOSITORY AND SETUP A EVENT TO PASS THE DATA TO THE UI
-    private val _eventsChannel = Channel<Events>()
-    val eventsChannel = _eventsChannel.receiveAsFlow()
+    private val _articlesEvent = Channel<Events>()
+    val articlesEvent = _articlesEvent.receiveAsFlow()
 
     sealed class Events {
         object Successful : Events()
@@ -34,23 +33,40 @@ class NewsViewModel @Inject constructor(
         viewModelScope.launch {
             existingStatus.value = repository.checkIfSavedExist(article.url.toString())
             if (existingStatus.value!! > 0) {
-                _eventsChannel.send(Events.Failure)
+                _articlesEvent.send(Events.Failure)
                 return@launch
             }
             saveArticle(article)
-            _eventsChannel.send(Events.Successful)
+            _articlesEvent.send(Events.Successful)
         }
 
     }
+
+    private val _breakingNewsEvent = Channel<Events>()
+    val breakingNewsEvent = _breakingNewsEvent.receiveAsFlow()
+
+    fun getCountFrom() {
+        viewModelScope.launch {
+           val count = repository.getAllItemsCount()
+            if(count <= 0){
+                _breakingNewsEvent.send(Events.Failure)
+            }else{
+                _breakingNewsEvent.send(Events.Successful)
+            }
+        }
+
+    }
+
 
     //PAGING
     val pagingNews = repository.getPagingNews().cachedIn(viewModelScope)
     private val searchQuery = MutableLiveData("")
 
-    fun querySearch(query: String){
+    fun querySearch(query: String) {
         searchQuery.value = query
-}
-    val pagingSearchNews = searchQuery.switchMap { query->
+    }
+
+    val pagingSearchNews = searchQuery.switchMap { query ->
         repository.getPagingSearchNews(query).cachedIn(viewModelScope)
     }
 
@@ -117,6 +133,7 @@ class NewsViewModel @Inject constructor(
             repository.deleteSavedArticle(article)
         }
     }
+
 
     //endregion
 
