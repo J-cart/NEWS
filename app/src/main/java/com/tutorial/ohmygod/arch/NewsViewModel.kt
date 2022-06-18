@@ -144,12 +144,14 @@ class NewsViewModel @Inject constructor(
     fun deleteSavedArticle(article: SavedArticle) {
         viewModelScope.launch {
             repository.deleteSavedArticle(article)
+            getAllSavedNews()
         }
     }
 
     fun deleteAllSavedNews() =
         viewModelScope.launch {
             repository.deleteAllSaved()
+            
         }
 
 
