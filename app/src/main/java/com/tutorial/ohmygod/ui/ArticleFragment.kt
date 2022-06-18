@@ -152,10 +152,14 @@ class ArticleFragment : Fragment() {
 
     }
 
-    override fun onDestroy() {
-        super.onDestroy()
-        _binding = null
+    override fun onPause() {
+        super.onPause()
+        binding.webView.onPause()
     }
 
+    override fun onResume() {
+        super.onResume()
+        binding.webView.onResume()
+    }
 
 }

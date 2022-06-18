@@ -9,6 +9,7 @@ import android.view.*
 import android.webkit.WebChromeClient
 import android.webkit.WebView
 import android.webkit.WebViewClient
+import android.widget.ArrayAdapter
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
@@ -16,6 +17,7 @@ import androidx.navigation.fragment.navArgs
 import com.tutorial.ohmygod.R
 import com.tutorial.ohmygod.arch.NewsViewModel
 import com.tutorial.ohmygod.databinding.FragmentSavedNewsWebViewBinding
+import com.tutorial.ohmygod.db.JsonResponse
 
 
 class SavedNewsWebView : Fragment() {
@@ -103,5 +105,15 @@ class SavedNewsWebView : Fragment() {
             else -> super.onOptionsItemSelected(item)
         }
 
+    }
+
+    override fun onPause() {
+        super.onPause()
+        binding.webView.onPause()
+    }
+
+    override fun onResume() {
+        super.onResume()
+        binding.webView.onResume()
     }
 }
