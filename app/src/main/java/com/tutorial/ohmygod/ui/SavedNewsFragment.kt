@@ -14,18 +14,20 @@ import com.tutorial.ohmygod.R
 import com.tutorial.ohmygod.arch.NewsViewModel
 import com.tutorial.ohmygod.databinding.FragmentSavedNewsBinding
 import com.tutorial.ohmygod.db.SavedArticle
+import com.tutorial.ohmygod.utils.ItemClicked
 import com.tutorial.ohmygod.utils.LocalNewsAdapter
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
-class SavedNews : Fragment() {
+class SavedNews : Fragment(), ItemClicked {
 
     private val viewModel: NewsViewModel by activityViewModels()
-    private val savedNewsAdapter: LocalNewsAdapter by lazy { LocalNewsAdapter() }
+    private val savedNewsAdapter: LocalNewsAdapter by lazy { LocalNewsAdapter(this) }
 
     private var _binding: FragmentSavedNewsBinding? = null
     private val binding get() = _binding!!
 
+    val aList = emptyList<SavedArticle>()
 
 
     override fun onCreateView(
@@ -125,6 +127,28 @@ class SavedNews : Fragment() {
             }
             show()
         }
+
+    }
+
+    override fun itemClicked(data: SavedArticle) {
+        val pos = savedNewsAdapter.currentList.indexOf(data)
+        if (pos == 0) {
+            viewModel.deleteSavedArticle(data)
+            savedNewsAdapter.submitList(emptyList())
+        } else {
+            viewModel.deleteSavedArticle(data)
+        }
+
+    }
+
+    override fun posClicked(position: Int) {
+//        val pos = savedNewsAdapter.currentList[position]
+//        if (position == 0){
+//            viewModel.deleteSavedArticle(pos)
+//            savedNewsAdapter.submitList(emptyList())
+//        }else{
+//            viewModel.deleteSavedArticle(pos)
+//        }
 
     }
 }

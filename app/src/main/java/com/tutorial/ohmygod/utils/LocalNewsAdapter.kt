@@ -12,7 +12,7 @@ import com.tutorial.ohmygod.databinding.NewsViewHolderBinding
 import com.tutorial.ohmygod.db.Article
 import com.tutorial.ohmygod.db.SavedArticle
 
-class LocalNewsAdapter : ListAdapter<SavedArticle, LocalNewsAdapter.ViewHolder>(diffObject) {
+class LocalNewsAdapter (private val onClicked: ItemClicked): ListAdapter<SavedArticle, LocalNewsAdapter.ViewHolder>(diffObject) {
     inner class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
         private val binding = NewsViewHolderBinding.bind(view)
         fun bind(article: SavedArticle) {
@@ -25,6 +25,9 @@ class LocalNewsAdapter : ListAdapter<SavedArticle, LocalNewsAdapter.ViewHolder>(
                 tvDescription.text = article.description
                 tvPublishedAt.text = article.publishedAt
                 tvSourceName.text = article.source?.name
+            }
+            binding.deleteBtn.setOnClickListener {
+                onClicked.itemClicked(article)
             }
             binding.root.setOnClickListener {
                 listener?.let {
