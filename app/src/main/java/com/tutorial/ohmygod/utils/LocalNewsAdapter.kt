@@ -12,12 +12,12 @@ import com.tutorial.ohmygod.databinding.NewsViewHolderBinding
 import com.tutorial.ohmygod.db.Article
 import com.tutorial.ohmygod.db.SavedArticle
 
-class LocalNewsAdapter: ListAdapter<SavedArticle, LocalNewsAdapter.ViewHolder>(DiffCallback) {
-    inner class ViewHolder(view: View): RecyclerView.ViewHolder(view) {
+class LocalNewsAdapter : ListAdapter<SavedArticle, LocalNewsAdapter.ViewHolder>(diffObject) {
+    inner class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
         private val binding = NewsViewHolderBinding.bind(view)
-        fun bind(article: SavedArticle){
+        fun bind(article: SavedArticle) {
             binding.apply {
-                imgUrl.load(article.urlToImage){
+                imgUrl.load(article.urlToImage) {
                     placeholder(R.drawable.ic_baseline_image_24)
                     error(R.drawable.ic_baseline_broken_image_24)
                 }
@@ -26,7 +26,7 @@ class LocalNewsAdapter: ListAdapter<SavedArticle, LocalNewsAdapter.ViewHolder>(D
                 tvPublishedAt.text = article.publishedAt
                 tvSourceName.text = article.source?.name
             }
-            binding.root.setOnClickListener{
+            binding.root.setOnClickListener {
                 listener?.let {
                     it(article)
                 }
@@ -37,32 +37,31 @@ class LocalNewsAdapter: ListAdapter<SavedArticle, LocalNewsAdapter.ViewHolder>(D
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
-        val view = LayoutInflater.from(parent.context).inflate(R.layout.news_view_holder,parent,false)
+        val view =
+            LayoutInflater.from(parent.context).inflate(R.layout.news_view_holder, parent, false)
         return ViewHolder(view)
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val pos = getItem(position)
-        holder.bind(pos)
+        if (pos != null)
+            holder.bind(pos)
 
     }
 
-    companion object DiffCallback : DiffUtil.ItemCallback<SavedArticle>() {
-
-        override fun areItemsTheSame(oldItem: SavedArticle, newItem: SavedArticle): Boolean {
-            return oldItem.url == oldItem.url// oldItem.title == newItem.title  || oldItem.url == oldItem.url
+    companion object {
+        val diffObject = object : DiffUtil.ItemCallback<SavedArticle>() {
+            override fun areItemsTheSame(oldItem: SavedArticle, newItem: SavedArticle): Boolean {
+                return oldItem.id == newItem.id
+            }
+            override fun areContentsTheSame(oldItem: SavedArticle, newItem: SavedArticle): Boolean {
+                return oldItem.url == newItem.url
+            }
         }
-
-        override fun areContentsTheSame(oldItem: SavedArticle, newItem: SavedArticle): Boolean {
-            return    oldItem == newItem//oldItem.url == newItem.url && oldItem.description == oldItem.description
-        }
-
     }
+    private var listener: ((SavedArticle) -> Unit)? = null
 
-
-    private var listener:((SavedArticle)->Unit)? = null
-
-    fun adapterClickListener(listener:(SavedArticle)->Unit){
+    fun adapterClickListener(listener: (SavedArticle) -> Unit) {
         this.listener = listener
     }
 }

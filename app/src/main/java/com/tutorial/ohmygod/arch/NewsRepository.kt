@@ -55,9 +55,9 @@ class NewsRepository @Inject constructor(private val newsApi: NewsApiService, va
     override suspend fun checkIfSavedExist(data: String): Int =
         db.getSavedNewsDao().checkIfExists(data)
 
+    override suspend fun deleteAllSaved() = db.getSavedNewsDao().deleteAll()
 
-
-//////////////////////////////////////////////////////////////////////////////////////////
+    //////////////////////////////////////////////////////////////////////////////////////////
 
 
     var responseStatus: JsonResponse? = null

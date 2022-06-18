@@ -23,5 +23,6 @@ interface MainNewsRepository {
     suspend fun deleteSavedArticle(article: SavedArticle)
     suspend fun saveArticle(article: SavedArticle)
     suspend fun checkIfSavedExist(data:String):Int
+    suspend fun deleteAllSaved()
 
 }

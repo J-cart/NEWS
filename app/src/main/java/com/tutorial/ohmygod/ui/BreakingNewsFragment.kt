@@ -17,7 +17,6 @@ import com.tutorial.ohmygod.databinding.FragmentBreakingNewsBinding
 import com.tutorial.ohmygod.utils.NewsAdapter
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collect
-import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.distinctUntilChangedBy
 import kotlinx.coroutines.flow.filter
 import kotlinx.coroutines.launch
@@ -79,7 +78,7 @@ class BreakingNews : Fragment() {
                 .distinctUntilChangedBy {
                     it.mediator?.refresh
                 }
-                .filter { it.mediator?.refresh is LoadState.NotLoading }
+                .filter { it.mediator?.refresh is LoadState.NotLoading}
                 .collect { binding.breakingNewsRV.scrollToPosition(0) }
         }
 
@@ -87,10 +86,10 @@ class BreakingNews : Fragment() {
             when (loadstate.mediator?.refresh) {
                 is LoadState.Loading -> {
                     hideError()
-                    showLoadingState()
+                    viewModel.checkSizeFromDB()
                 }
                 is LoadState.Error -> {
-                    viewModel.getCountFrom()
+                    viewModel.checkSizeFromDB()
                     Snackbar.make(requireView(), "ERROR! Try refreshing news", Snackbar.LENGTH_LONG)
                         .setAction("Refresh") { pagingAdapter.retry() }.show()
                 }

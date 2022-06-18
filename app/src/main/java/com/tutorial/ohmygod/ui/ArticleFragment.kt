@@ -5,10 +5,9 @@ import android.content.Intent
 import android.graphics.Bitmap
 import android.net.Uri
 import android.os.Bundle
+import android.util.Log
 import android.view.*
-import android.webkit.WebChromeClient
-import android.webkit.WebView
-import android.webkit.WebViewClient
+import android.webkit.*
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
@@ -22,6 +21,7 @@ import com.tutorial.ohmygod.db.Article
 import com.tutorial.ohmygod.db.SavedArticle
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collect
+import java.net.HttpURLConnection
 
 @AndroidEntryPoint
 class ArticleFragment : Fragment() {
@@ -99,7 +99,7 @@ class ArticleFragment : Fragment() {
                             .show()
                     }
                     is NewsViewModel.Events.Failure -> {
-                        Snackbar.make(view, "ERROR , IT EXISTS ALREADY", Snackbar.LENGTH_SHORT)
+                        Snackbar.make(view, "ERROR! .. IT EXISTS ALREADY", Snackbar.LENGTH_SHORT)
                             .show()
                     }
                 }
@@ -149,6 +149,11 @@ class ArticleFragment : Fragment() {
             else -> super.onOptionsItemSelected(item)
         }
 
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        _binding = null
     }
 
 

@@ -1,22 +1,24 @@
 package com.tutorial.ohmygod.ui
 
+import android.annotation.SuppressLint
 import android.os.Bundle
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
+import android.view.*
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.RecyclerView
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.snackbar.Snackbar
+import com.tutorial.ohmygod.R
 import com.tutorial.ohmygod.arch.NewsViewModel
 import com.tutorial.ohmygod.databinding.FragmentSavedNewsBinding
-import com.tutorial.ohmygod.db.Article
-import com.tutorial.ohmygod.db.Source
 import com.tutorial.ohmygod.utils.LocalNewsAdapter
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
 class SavedNews : Fragment() {
@@ -33,6 +35,7 @@ class SavedNews : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         // Inflate the layout for this fragment
+        setHasOptionsMenu(true)
         _binding = FragmentSavedNewsBinding.inflate(inflater, container, false)
         return binding.root
     }
@@ -42,7 +45,7 @@ class SavedNews : Fragment() {
         binding.apply {
             savedNewsRV.adapter = savedNewsAdapter
         }
-        viewModel.getAllSavedNews().observe(viewLifecycleOwner) { list ->
+        viewModel.allSavedNews.observe(viewLifecycleOwner) { list ->
             when {
                 list.isNotEmpty() -> {
                     savedNewsAdapter.submitList(list)
@@ -87,5 +90,36 @@ class SavedNews : Fragment() {
         ItemTouchHelper(itemTouchHelperCallBack).apply {
             attachToRecyclerView(binding.savedNewsRV)
         }
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
+        super.onCreateOptionsMenu(menu, inflater)
+        inflater.inflate(R.menu.saved_news_menu, menu)
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        return when (item.itemId) {
+            R.id.deleteAll -> {
+                showDialog()
+                true
+            }
+            else -> super.onOptionsItemSelected(item)
+        }
+
+    }
+
+
+    private fun showDialog() {
+        MaterialAlertDialogBuilder(requireContext()).apply {
+            setMessage("Are you sure you want to delete all saved news?")
+            setPositiveButton("YES") { d, i ->
+                viewModel.deleteAllSavedNews()
+            }
+            setNegativeButton("NO") { d, i ->
+                d.dismiss()
+            }
+            show()
+        }
+
     }
 }

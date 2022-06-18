@@ -2,12 +2,14 @@ package com.tutorial.ohmygod.arch
 
 import androidx.lifecycle.*
 import androidx.paging.cachedIn
+import com.tutorial.ohmygod.db.Article
 import com.tutorial.ohmygod.db.JsonResponse
 import com.tutorial.ohmygod.db.SavedArticle
 import com.tutorial.ohmygod.utils.DispatcherProvider
 import com.tutorial.ohmygod.utils.Resource
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.channels.Channel
+import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -45,7 +47,7 @@ class NewsViewModel @Inject constructor(
     private val _breakingNewsEvent = Channel<Events>()
     val breakingNewsEvent = _breakingNewsEvent.receiveAsFlow()
 
-    fun getCountFrom() {
+    fun checkSizeFromDB() {
         viewModelScope.launch {
            val count = repository.getAllItemsCount()
             if(count <= 0){
@@ -83,9 +85,10 @@ class NewsViewModel @Inject constructor(
     private var breakingNewspages = 1
     private var searchNewspages = 1
 
-//    init {
+    init {
 //       handleResponse()
-//    }
+        getAllSavedNews()
+    }
 
 
     fun handleResponse() {
@@ -120,7 +123,17 @@ class NewsViewModel @Inject constructor(
 
     //region ROOM-DB
 
-    fun getAllSavedNews() = repository.getAllSavedNews().asLiveData()
+    private val _allSavedNews = MutableLiveData<List<SavedArticle>>()
+    val allSavedNews :LiveData<List<SavedArticle>> get() = _allSavedNews
+
+    fun getAllSavedNews() {
+        viewModelScope.launch {
+            repository.getAllSavedNews().collect {
+                _allSavedNews.value = it
+            }
+        }
+
+    }
 
     fun saveArticle(article: SavedArticle) {
         viewModelScope.launch {
@@ -133,6 +146,12 @@ class NewsViewModel @Inject constructor(
             repository.deleteSavedArticle(article)
         }
     }
+
+    fun deleteAllSavedNews() =
+        viewModelScope.launch {
+            repository.deleteAllSaved()
+        }
+
 
 
     //endregion

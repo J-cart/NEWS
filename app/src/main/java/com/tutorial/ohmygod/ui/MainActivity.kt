@@ -29,6 +29,7 @@ class MainActivity : AppCompatActivity() {
         setContentView(binding.root)
         viewModel.handleResponse()
 
+
         appBarConfiguration = AppBarConfiguration(
             setOf(
                 R.id.breakingNews,

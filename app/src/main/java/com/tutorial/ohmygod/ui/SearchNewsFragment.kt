@@ -7,6 +7,7 @@ import android.view.ViewGroup
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.paging.LoadState
 import com.tutorial.ohmygod.R
@@ -19,6 +20,9 @@ import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.flow.distinctUntilChangedBy
+import kotlinx.coroutines.flow.filter
 import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
@@ -58,6 +62,15 @@ class SearchNews : Fragment() {
             pagingAdapter.submitData(viewLifecycleOwner.lifecycle, it)
         }
 
+        lifecycleScope.launch {
+            pagingAdapter.loadStateFlow
+                .distinctUntilChangedBy {
+                    it.refresh
+                }
+                .filter { it.refresh is LoadState.NotLoading }
+                .collect { binding.searchNewsRV.scrollToPosition(0) }
+        }
+
         pagingAdapter.addLoadStateListener { loadstate ->
             when (loadstate.source.refresh) {
                 is LoadState.Loading -> {
@@ -91,14 +104,14 @@ class SearchNews : Fragment() {
                 }
 
                 override fun onQueryTextChange(newText: String?): Boolean {
-                    binding.searchView.isActivated = true
-                    job?.cancel()
-                    job = MainScope().launch {
-                        delay(600L)
-                        newText?.let { viewModel.querySearch(it) }
-                    }
-                    //newText.let { viewModel.searchNews(it) }
-                    return true
+//                    binding.searchView.isActivated = true
+//                    job?.cancel()
+//                    job = MainScope().launch {
+//                        delay(600L)
+//                        newText?.let { viewModel.querySearch(it) }
+//                    }
+//                    //newText.let { viewModel.searchNews(it) }
+                    return false
                 }
             })
 

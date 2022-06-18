@@ -45,7 +45,7 @@ class BNRemoteMediator(
             result?.let {
                 mainResult = it
             }
-            val isEndOfList = mainResult.size < state.config.pageSize
+            val isEndOfList = mainResult.isEmpty() //.size < state.config.pageSize
 
             db.withTransaction {
                 if (loadType == LoadType.REFRESH) {
@@ -83,13 +83,13 @@ class BNRemoteMediator(
             LoadType.PREPEND -> {
                 val remoteKeys = getFirstRemoteKey(state)
                 val prevKey =
-                    remoteKeys?.prevKey ?: MediatorResult.Success(endOfPaginationReached = true)//remoteKeys != null
+                    remoteKeys?.prevKey ?: MediatorResult.Success(endOfPaginationReached = remoteKeys != null)//
                 prevKey
             }
             LoadType.APPEND -> {
                 val remoteKeys = getLastRemoteKey(state)
                 val nextKey =
-                    remoteKeys?.nextKey ?: MediatorResult.Success(endOfPaginationReached = false)//remoteKeys != null
+                    remoteKeys?.nextKey ?: MediatorResult.Success(endOfPaginationReached = remoteKeys != null)//
                 nextKey
             }
         }
