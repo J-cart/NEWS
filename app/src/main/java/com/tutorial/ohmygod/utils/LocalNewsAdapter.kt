@@ -26,9 +26,9 @@ class LocalNewsAdapter (private val onClicked: ItemClicked): ListAdapter<SavedAr
                 tvPublishedAt.text = article.publishedAt
                 tvSourceName.text = article.source?.name
             }
-            binding.deleteBtn.setOnClickListener {
+           /* binding.deleteBtn.setOnClickListener {
                 onClicked.itemClicked(article)
-            }
+            }*/
             binding.root.setOnClickListener {
                 listener?.let {
                     it(article)

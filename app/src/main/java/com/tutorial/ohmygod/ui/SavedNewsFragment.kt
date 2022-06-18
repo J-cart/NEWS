@@ -1,5 +1,6 @@
 package com.tutorial.ohmygod.ui
 
+import android.annotation.SuppressLint
 import android.os.Bundle
 import android.view.*
 import androidx.core.view.isVisible
@@ -52,12 +53,8 @@ class SavedNews : Fragment(), ItemClicked {
                     savedNewsAdapter.submitList(list)
                     binding.progressBar.isVisible = false
                     binding.emptyStateTv.isVisible = false
-
                 }
-                else -> {
-                    binding.emptyStateTv.isVisible = true
-//                    binding.savedNewsRV.isVisible = false
-                }
+                else -> binding.emptyStateTv.isVisible = true
             }
         }
 
@@ -114,6 +111,7 @@ class SavedNews : Fragment(), ItemClicked {
     }
 
 
+    @SuppressLint("NotifyDataSetChanged")
     private fun showDialog() {
         MaterialAlertDialogBuilder(requireContext()).apply {
             setMessage("Are you sure you want to delete all saved news?")
@@ -130,6 +128,7 @@ class SavedNews : Fragment(), ItemClicked {
 
     }
 
+    //No UI element is currently implementing this
     override fun itemClicked(data: SavedArticle) {
         val pos = savedNewsAdapter.currentList.indexOf(data)
         if (pos == 0) {
@@ -141,14 +140,4 @@ class SavedNews : Fragment(), ItemClicked {
 
     }
 
-    override fun posClicked(position: Int) {
-//        val pos = savedNewsAdapter.currentList[position]
-//        if (position == 0){
-//            viewModel.deleteSavedArticle(pos)
-//            savedNewsAdapter.submitList(emptyList())
-//        }else{
-//            viewModel.deleteSavedArticle(pos)
-//        }
-
-    }
 }

@@ -144,7 +144,6 @@ class NewsViewModel @Inject constructor(
     fun deleteSavedArticle(article: SavedArticle) {
         viewModelScope.launch {
             repository.deleteSavedArticle(article)
-            getAllSavedNews()
         }
     }
 
@@ -152,8 +151,6 @@ class NewsViewModel @Inject constructor(
         viewModelScope.launch {
             repository.deleteAllSaved()
         }
-
-
 
     //endregion
 
