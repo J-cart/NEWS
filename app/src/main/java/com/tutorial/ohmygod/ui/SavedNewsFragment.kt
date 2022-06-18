@@ -1,12 +1,10 @@
 package com.tutorial.ohmygod.ui
 
-import android.annotation.SuppressLint
 import android.os.Bundle
 import android.view.*
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
-import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.RecyclerView
@@ -15,10 +13,9 @@ import com.google.android.material.snackbar.Snackbar
 import com.tutorial.ohmygod.R
 import com.tutorial.ohmygod.arch.NewsViewModel
 import com.tutorial.ohmygod.databinding.FragmentSavedNewsBinding
+import com.tutorial.ohmygod.db.SavedArticle
 import com.tutorial.ohmygod.utils.LocalNewsAdapter
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.flow.collect
-import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
 class SavedNews : Fragment() {
@@ -28,6 +25,7 @@ class SavedNews : Fragment() {
 
     private var _binding: FragmentSavedNewsBinding? = null
     private val binding get() = _binding!!
+
 
 
     override fun onCreateView(
@@ -48,11 +46,16 @@ class SavedNews : Fragment() {
         viewModel.allSavedNews.observe(viewLifecycleOwner) { list ->
             when {
                 list.isNotEmpty() -> {
+
                     savedNewsAdapter.submitList(list)
                     binding.progressBar.isVisible = false
                     binding.emptyStateTv.isVisible = false
+
                 }
-                else -> binding.emptyStateTv.isVisible = true
+                else -> {
+                    binding.emptyStateTv.isVisible = true
+//                    binding.savedNewsRV.isVisible = false
+                }
             }
         }
 
@@ -114,6 +117,8 @@ class SavedNews : Fragment() {
             setMessage("Are you sure you want to delete all saved news?")
             setPositiveButton("YES") { d, i ->
                 viewModel.deleteAllSavedNews()
+                savedNewsAdapter.submitList(emptyList())
+                savedNewsAdapter.notifyDataSetChanged()
             }
             setNegativeButton("NO") { d, i ->
                 d.dismiss()

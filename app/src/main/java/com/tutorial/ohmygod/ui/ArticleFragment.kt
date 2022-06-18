@@ -21,6 +21,7 @@ import com.tutorial.ohmygod.db.Article
 import com.tutorial.ohmygod.db.SavedArticle
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.launch
 import java.net.HttpURLConnection
 
 @AndroidEntryPoint
@@ -91,7 +92,7 @@ class ArticleFragment : Fragment() {
         }
 
 
-        viewLifecycleOwner.lifecycleScope.launchWhenStarted {
+        viewLifecycleOwner.lifecycleScope.launch{
             viewModel.articlesEvent.collect { event ->
                 when (event) {
                     is NewsViewModel.Events.Successful -> {
