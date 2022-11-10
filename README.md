@@ -1,4 +1,4 @@
-<h1 align="center">Weatheria</h1>
+<h1 align="center">NEWS</h1>
 
 
 
