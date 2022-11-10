@@ -61,7 +61,9 @@ The UI layer consists of UI elements to configure screens that could interact wi
 The data Layer consists of repositories, which include business logic, such as querying data from the local database and requesting remote data from the network. It is implemented as an offline-first source of business logic and follows the [single source of truth](https://en.wikipedia.org/wiki/Single_source_of_truth) principle.<br>
 
 **NEWS** is an offline functional app that is able to perform some all of its core functionality without access to the internet. 
- Users might need to be updated on network resources to get up to date info and access some other functionalities too. It relies heavily on the remote mediator of the paging library . For further information, you can check out [Page from network and database](https://developer.android.com/topic/libraries/architecture/paging/v3-network-db).
+ Users might need to be updated on network resources to get up to date info and access some other functionalities too. It relies heavily on the remote mediator of the paging library ![paging3-base-lifecycle](https://user-images.githubusercontent.com/82452881/201220135-b40390a3-268b-4a2c-b5c6-a4dbec009c4e.png)
+ For further information, you can check out [Page from network and database](https://developer.android.com/topic/libraries/architecture/paging/v3-network-db).
+
 
 
 
