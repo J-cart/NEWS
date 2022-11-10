@@ -5,23 +5,20 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.ArrayAdapter
 import androidx.annotation.RequiresApi
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.paging.LoadState
+import androidx.recyclerview.widget.DividerItemDecoration
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.material.snackbar.Snackbar
-import com.tutorial.ohmygod.R
 import com.tutorial.ohmygod.arch.NewsViewModel
 import com.tutorial.ohmygod.arch.paging3.BNLoadingAdapter
 import com.tutorial.ohmygod.arch.paging3.BNPagingAdapter
 import com.tutorial.ohmygod.databinding.FragmentBreakingNewsBinding
-import com.tutorial.ohmygod.db.JsonResponse
-import com.tutorial.ohmygod.utils.NewsAdapter
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.distinctUntilChangedBy
 import kotlinx.coroutines.flow.filter
 import kotlinx.coroutines.launch
@@ -31,7 +28,6 @@ import kotlinx.coroutines.launch
 class BreakingNews : Fragment() {
 
     private val viewModel: NewsViewModel by activityViewModels()
-    private val newsAdapter: NewsAdapter by lazy { NewsAdapter() }
     private var _binding: FragmentBreakingNewsBinding? = null
     private val binding get() = _binding!!
 
@@ -58,6 +54,12 @@ class BreakingNews : Fragment() {
 
         //region PAGING3
         binding.apply {
+            breakingNewsRV.addItemDecoration(
+                DividerItemDecoration(
+                    requireContext(),
+                    LinearLayoutManager.VERTICAL
+                )
+            )
             breakingNewsRV.adapter = pagingAdapter.withLoadStateHeaderAndFooter(
                 header = BNLoadingAdapter { pagingAdapter.retry() },
                 footer = BNLoadingAdapter { pagingAdapter.retry() }
@@ -90,7 +92,6 @@ class BreakingNews : Fragment() {
         pagingAdapter.addLoadStateListener { loadstate ->
             when (loadstate.mediator?.refresh) {
                 is LoadState.Loading -> {
-                    hideError()
                     viewModel.checkSizeFromDB()
                 }
                 is LoadState.Error -> {
@@ -99,7 +100,6 @@ class BreakingNews : Fragment() {
                         .setAction("Refresh") { pagingAdapter.retry() }.show()
                 }
                 is LoadState.NotLoading -> {
-                    hideError()
                     hideLoadingState()
                 }
             }
@@ -116,39 +116,6 @@ class BreakingNews : Fragment() {
         }
         //endregion
 
-
-//region NORMAL REQUEST
-        /*  binding.apply {
-              breakingNewsRV.adapter = newsAdapter
-          }
-
-          viewModel.breakingNews.observe(viewLifecycleOwner){resource->
-              when(resource){
-                  is Resource.Loading ->{
-                      hideError()
-                      showLoadingState()
-                  }
-                  is Resource.Successful->{
-                      hideError()
-                      hideLoadingState()
-                      newsAdapter.submitList(resource.data?.articles)
-                  }
-                  is Resource.Failure->{
-                      hideLoadingState()
-                      resource.msg?.let {
-                          showError(it)
-                      }
-                  }
-              }
-
-          }
-
-          newsAdapter.adapterClickListener { article->
-              val navigate = BreakingNewsDirections.actionBreakingNewsToArticleFragment(article)
-              findNavController().navigate(navigate)
-          }*/
-        //endregion
-
     }
 
     private fun showLoadingState() {
@@ -157,13 +124,6 @@ class BreakingNews : Fragment() {
 
     private fun hideLoadingState() {
         binding.progressBar.visibility = View.GONE
-    }
-
-    private fun showError(errorText: String) {
-    }
-
-    private fun hideError() {
-
     }
 
 }

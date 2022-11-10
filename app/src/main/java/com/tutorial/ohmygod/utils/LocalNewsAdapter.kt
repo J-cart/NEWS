@@ -11,15 +11,16 @@ import androidx.recyclerview.widget.RecyclerView
 import coil.load
 import com.tutorial.ohmygod.R
 import com.tutorial.ohmygod.databinding.NewsViewHolderBinding
+import com.tutorial.ohmygod.databinding.SavedNewsViewholderBinding
 import com.tutorial.ohmygod.db.Article
 import com.tutorial.ohmygod.db.SavedArticle
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 import java.util.*
 @RequiresApi(Build.VERSION_CODES.O)
-class LocalNewsAdapter (private val onClicked: ItemClicked): ListAdapter<SavedArticle, LocalNewsAdapter.ViewHolder>(diffObject) {
+class LocalNewsAdapter (): ListAdapter<SavedArticle, LocalNewsAdapter.ViewHolder>(diffObject) {
     inner class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
-        private val binding = NewsViewHolderBinding.bind(view)
+        private val binding = SavedNewsViewholderBinding.bind(view)
         fun bind(article: SavedArticle) {
             binding.apply {
                 imgUrl.load(article.urlToImage) {
@@ -31,9 +32,7 @@ class LocalNewsAdapter (private val onClicked: ItemClicked): ListAdapter<SavedAr
                 tvPublishedAt.text = article.publishedAt?.let { getDateFormat(it) }
                 tvSourceName.text = article.source?.name
             }
-           /* binding.deleteBtn.setOnClickListener {
-                onClicked.itemClicked(article)
-            }*/
+
             binding.root.setOnClickListener {
                 listener?.let {
                     it(article)
@@ -46,7 +45,7 @@ class LocalNewsAdapter (private val onClicked: ItemClicked): ListAdapter<SavedAr
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val view =
-            LayoutInflater.from(parent.context).inflate(R.layout.news_view_holder, parent, false)
+            LayoutInflater.from(parent.context).inflate(R.layout.saved_news_viewholder, parent, false)
         return ViewHolder(view)
     }
 

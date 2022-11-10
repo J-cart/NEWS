@@ -9,32 +9,27 @@ import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
+import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.ItemTouchHelper
+import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.snackbar.Snackbar
 import com.tutorial.ohmygod.R
 import com.tutorial.ohmygod.arch.NewsViewModel
 import com.tutorial.ohmygod.databinding.FragmentSavedNewsBinding
-import com.tutorial.ohmygod.db.SavedArticle
-import com.tutorial.ohmygod.utils.ItemClicked
 import com.tutorial.ohmygod.utils.LocalNewsAdapter
 import dagger.hilt.android.AndroidEntryPoint
-import java.time.LocalDateTime
-import java.time.format.DateTimeFormatter
-import java.util.*
 
 @AndroidEntryPoint
 @RequiresApi(Build.VERSION_CODES.O)
-class SavedNews : Fragment(), ItemClicked {
+class SavedNews : Fragment(){
 
     private val viewModel: NewsViewModel by activityViewModels()
-    private val savedNewsAdapter: LocalNewsAdapter by lazy { LocalNewsAdapter(this) }
+    private val savedNewsAdapter: LocalNewsAdapter by lazy { LocalNewsAdapter() }
 
     private var _binding: FragmentSavedNewsBinding? = null
     private val binding get() = _binding!!
-
-    val aList = emptyList<SavedArticle>()
 
 
     override fun onCreateView(
@@ -69,6 +64,12 @@ class SavedNews : Fragment(), ItemClicked {
             findNavController().navigate(navigate)
         }
 
+        binding.savedNewsRV.addItemDecoration(
+            DividerItemDecoration(
+                requireContext(),
+                LinearLayoutManager.VERTICAL
+            )
+        )
 
         val itemTouchHelperCallBack = object : ItemTouchHelper.SimpleCallback(
             ItemTouchHelper.UP or ItemTouchHelper.DOWN,
@@ -133,18 +134,5 @@ class SavedNews : Fragment(), ItemClicked {
         }
 
     }
-
-    //No UI element is currently implementing this
-    override fun itemClicked(data: SavedArticle) {
-        val pos = savedNewsAdapter.currentList.indexOf(data)
-        if (pos == 0) {
-            viewModel.deleteSavedArticle(data)
-            savedNewsAdapter.submitList(emptyList())
-        } else {
-            viewModel.deleteSavedArticle(data)
-        }
-
-    }
-
 
 }

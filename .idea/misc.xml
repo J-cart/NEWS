@@ -3,6 +3,10 @@
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
       <map>
+        <entry key="..\:/Users/DELL/AndroidStudioProjects/OhMyGod/app/src/main/res/drawable/ic_baseline_library_add_check_24.xml" value="0.2595" />
+        <entry key="..\:/Users/DELL/AndroidStudioProjects/OhMyGod/app/src/main/res/drawable/ic_baseline_library_books_24.xml" value="0.2595" />
+        <entry key="..\:/Users/DELL/AndroidStudioProjects/OhMyGod/app/src/main/res/drawable/ic_breaking_news.xml" value="0.2595" />
+        <entry key="..\:/Users/DELL/AndroidStudioProjects/OhMyGod/app/src/main/res/drawable/ic_breakingnews.xml" value="0.2595" />
         <entry key="..\:/Users/DELL/AndroidStudioProjects/OhMyGod/app/src/main/res/drawable/ic_saved.xml" value="0.1" />
         <entry key="..\:/Users/DELL/AndroidStudioProjects/OhMyGod/app/src/main/res/drawable/search_background.xml" value="0.257" />
         <entry key="..\:/Users/DELL/AndroidStudioProjects/OhMyGod/app/src/main/res/drawable/search_background2.xml" value="0.257" />
@@ -16,8 +20,9 @@
         <entry key="..\:/Users/DELL/AndroidStudioProjects/OhMyGod/app/src/main/res/layout/news_load_state.xml" value="0.2557291666666667" />
         <entry key="..\:/Users/DELL/AndroidStudioProjects/OhMyGod/app/src/main/res/layout/news_view_holder.xml" value="0.2" />
         <entry key="..\:/Users/DELL/AndroidStudioProjects/OhMyGod/app/src/main/res/layout/progress_bar_viewholder.xml" value="0.2557291666666667" />
+        <entry key="..\:/Users/DELL/AndroidStudioProjects/OhMyGod/app/src/main/res/layout/saved_news_viewholder.xml" value="0.13196555217831812" />
         <entry key="..\:/Users/DELL/AndroidStudioProjects/OhMyGod/app/src/main/res/menu/article_frag_menu.xml" value="0.259375" />
-        <entry key="..\:/Users/DELL/AndroidStudioProjects/OhMyGod/app/src/main/res/menu/bottom_nav.xml" value="0.1" />
+        <entry key="..\:/Users/DELL/AndroidStudioProjects/OhMyGod/app/src/main/res/menu/bottom_nav.xml" value="0.2" />
         <entry key="..\:/Users/DELL/AndroidStudioProjects/OhMyGod/app/src/main/res/menu/saved_news_menu.xml" value="0.259375" />
       </map>
     </option>

@@ -5,9 +5,10 @@ import android.content.Intent
 import android.graphics.Bitmap
 import android.net.Uri
 import android.os.Bundle
-import android.util.Log
 import android.view.*
-import android.webkit.*
+import android.webkit.WebChromeClient
+import android.webkit.WebView
+import android.webkit.WebViewClient
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
@@ -20,9 +21,7 @@ import com.tutorial.ohmygod.databinding.FragmentArticleBinding
 import com.tutorial.ohmygod.db.Article
 import com.tutorial.ohmygod.db.SavedArticle
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
-import java.net.HttpURLConnection
 
 @AndroidEntryPoint
 class ArticleFragment : Fragment() {

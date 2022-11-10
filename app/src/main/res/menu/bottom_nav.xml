@@ -4,7 +4,7 @@
 
     <item
         android:id="@+id/breakingNews"
-        android:icon="@drawable/ic_breakingnews"
+        android:icon="@drawable/ic_baseline_library_books_24"
         android:title="Top News"
         app:showAsAction="always" />
     <item
@@ -14,7 +14,7 @@
         app:showAsAction="always" />
     <item
         android:id="@+id/savedNews"
-        android:icon="@drawable/ic_saved"
+        android:icon="@drawable/ic_baseline_library_add_check_24"
         android:title="Saved News"
         app:showAsAction="always" />
 
