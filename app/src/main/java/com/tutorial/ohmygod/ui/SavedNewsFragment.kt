@@ -1,8 +1,10 @@
 package com.tutorial.ohmygod.ui
 
 import android.annotation.SuppressLint
+import android.os.Build
 import android.os.Bundle
 import android.view.*
+import androidx.annotation.RequiresApi
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
@@ -18,8 +20,12 @@ import com.tutorial.ohmygod.db.SavedArticle
 import com.tutorial.ohmygod.utils.ItemClicked
 import com.tutorial.ohmygod.utils.LocalNewsAdapter
 import dagger.hilt.android.AndroidEntryPoint
+import java.time.LocalDateTime
+import java.time.format.DateTimeFormatter
+import java.util.*
 
 @AndroidEntryPoint
+@RequiresApi(Build.VERSION_CODES.O)
 class SavedNews : Fragment(), ItemClicked {
 
     private val viewModel: NewsViewModel by activityViewModels()
@@ -139,5 +145,6 @@ class SavedNews : Fragment(), ItemClicked {
         }
 
     }
+
 
 }

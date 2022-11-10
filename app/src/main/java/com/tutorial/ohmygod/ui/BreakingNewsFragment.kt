@@ -1,10 +1,12 @@
 package com.tutorial.ohmygod.ui
 
+import android.os.Build
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ArrayAdapter
+import androidx.annotation.RequiresApi
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.lifecycleScope
@@ -24,6 +26,7 @@ import kotlinx.coroutines.flow.distinctUntilChangedBy
 import kotlinx.coroutines.flow.filter
 import kotlinx.coroutines.launch
 
+@RequiresApi(Build.VERSION_CODES.O)
 @AndroidEntryPoint
 class BreakingNews : Fragment() {
 
@@ -69,7 +72,6 @@ class BreakingNews : Fragment() {
                     }
                     is NewsViewModel.Events.Failure->{
                         showLoadingState()
-
                     }
                 }
 
