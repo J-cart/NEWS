@@ -3,7 +3,7 @@
 
 
 <p align="center">  
-NEWS demonstrates modern Android development with Hilt, Coroutines, Flow, Jetpack (Room, ViewModel), and Material Design based on MVVM architecture.
+📰📰 NEWS.. be updated, get all your favorite news and headlines from all around the globe
 </p>
 </br>
 
